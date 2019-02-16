@@ -1,5 +1,9 @@
 package com.example.p2hacks;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
@@ -11,14 +15,19 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import static android.hardware.Sensor.TYPE_ACCELEROMETER;
 import static com.example.p2hacks.R.id.onButton;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements SensorEventListener {
 
     private TextView textView1;//テキスト↑
     private TextView textView2;//テキスト↓
     private Button  button1;//ON, OFFボタン
     private boolean flag = false;//ON, OFFボタンのフラグ
+    private SensorManager sensorManager; //センサのマネージャ
+    private float bufx = 0, bufy = 0, bufz = 0; //センサの値のバッファ
+    private float ctX = 0, ctY = 0, ctZ = 0;    //センサのカウンタ
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,24 +37,30 @@ public class MainActivity extends AppCompatActivity {
         /*-----onボタン押したらtextView, ImageView変更-----*/
         button1 = findViewById(onButton);
 
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
         textView1 = findViewById(R.id.ueText);
         textView2 = findViewById(R.id.sitaText);
 
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 // flagがtrueの時
                 if (flag) {
                     textView1.setText("居眠り監視アラート");
                     textView2.setText("ボタンを押してStart");
                     button1.setText("Start");
+                    ctX = 0;
+                    ctY = 0;
+                    ctZ = 0;
 
                     flag = false;
                 }
                 // flagがfalseの時
                 else {
                     textView1.setText("WATCHING…");
-                    textView2.setText("居眠りを監視中…");
+                    //textView2.setText("居眠りを監視中…");
                     button1.setText("Stop");
 
                     flag = true;
@@ -62,6 +77,60 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        // Listenerの登録
+        Sensor accel = sensorManager.getDefaultSensor(
+                TYPE_ACCELEROMETER);
+
+        sensorManager.registerListener(this,accel, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    //解除コードも入れる
+    @Override
+    protected void onPause(){
+        super.onPause();
+        //Listenerの解除
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event){
+        float sensorX, sensorY, sensorZ;
+        float defx, defy, defz;
+
+        if(event.sensor.getType() == TYPE_ACCELEROMETER){
+            sensorX = event.values[0];
+            sensorY = event.values[1];
+            sensorZ = event.values[2];
+
+            defx = Math.abs(sensorX - bufx);
+            defy = Math.abs(sensorY - bufy);
+            defz = Math.abs(sensorZ - bufz);
+
+            bufx = sensorX;
+            bufy = sensorY;
+            bufz = sensorZ;
+
+            if(defx > 20) ctX++;
+            if(defy > 20) ctY++;
+            if(defz > 20) ctZ++;
+
+            String strct = ""
+                    + " X: " + ctX + "\n"
+                    + " Y: " + ctY + "\n"
+                    + " Z: " + ctZ;
+
+            if(flag) textView2.setText(strct);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy){
 
     }
 }
