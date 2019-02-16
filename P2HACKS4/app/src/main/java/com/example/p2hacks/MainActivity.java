@@ -25,9 +25,11 @@ public class MainActivity extends AppCompatActivity
     private TextView textView2;//テキスト↓
     private Button  button1;//ON, OFFボタン
     private boolean flag = false;//ON, OFFボタンのフラグ
+    private boolean outflag = false;
     private SensorManager sensorManager; //センサのマネージャ
     private float bufx = 0, bufy = 0, bufz = 0; //センサの値のバッファ
-    private float ctX = 0, ctY = 0, ctZ = 0;    //センサのカウンタ
+    private float ct = 0;    //センサのカウンタ
+    private int limit = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,26 +47,9 @@ public class MainActivity extends AppCompatActivity
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                // flagがtrueの時
-                if (flag) {
-                    textView1.setText("居眠り監視アラート");
-                    textView2.setText("ボタンを押してStart");
-                    button1.setText("Start");
-                    ctX = 0;
-                    ctY = 0;
-                    ctZ = 0;
-
-                    flag = false;
-                }
-                // flagがfalseの時
-                else {
-                    textView1.setText("WATCHING…");
-                    //textView2.setText("居眠りを監視中…");
-                    button1.setText("Stop");
-
-                    flag = true;
-                }
+                flag = !flag;
+                textset(flag, outflag);
+                ct = 0;
             }
         });
 
@@ -116,21 +101,53 @@ public class MainActivity extends AppCompatActivity
             bufy = sensorY;
             bufz = sensorZ;
 
-            if(defx > 20) ctX++;
-            if(defy > 20) ctY++;
-            if(defz > 20) ctZ++;
+            if(defx + defy + defz > limit) ct++;
 
-            String strct = ""
-                    + " X: " + ctX + "\n"
-                    + " Y: " + ctY + "\n"
-                    + " Z: " + ctZ;
+            String strct = " ct: " + ct + "\n";
 
-            if(flag) textView2.setText(strct);
+            if(flag || outflag) textView2.setText(strct);
+
+            //stopボタンのとき，ctが20を超えたらヘドバン
+            if(flag && !outflag && ct > 10) {
+                outflag = !outflag;
+                textset(flag, outflag);
+                ct = 0;
+                //このあたりで音声鳴らしてもよか？
+            //ヘドバンのとき，ctが60を超えたとき最初の画面へ
+            }else if(outflag && ct > 300){
+                outflag = !outflag;
+                flag = !flag;
+                textset(flag,outflag);
+                ct = 0;
+            }
+
+            if(outflag){
+                //このときアラームを鳴らす
+
+            }
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy){
 
+    }
+
+    public void textset(boolean a, boolean b){
+        if(!b){
+            if(!a){
+                textView1.setText("居眠り監視アラート");
+                textView2.setText("ボタンを押してStart");
+                button1.setText("Start");
+            }else{
+                textView1.setText("WATCHING…");
+                //textView2.setText("居眠りを監視中…");
+                button1.setText("Stop");
+            }
+        }else{
+            textView1.setText("warning!!!!!!!!");
+            textView2.setText("ヘドバンの時間だ！！！");
+            button1.setText("NOOO");
+        }
     }
 }
