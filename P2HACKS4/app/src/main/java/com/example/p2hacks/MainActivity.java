@@ -4,6 +4,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.SoundPool;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,6 +39,10 @@ public class MainActivity extends AppCompatActivity
 
     //private boolean move = false;
     public  boolean move = false;
+
+    //SoundPool
+    private SoundPool soundPool;
+    private int soundOne, soundTwo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +124,7 @@ public class MainActivity extends AppCompatActivity
 
             String strct = " ct: " + ct + "\n";
 
-            if(flag || outflag) textView2.setText(strct);
+            if(flag || outflag) textView2.setText(strct);//カウント確認用なのでコメントアウト
 
             //stopボタンのとき，ctが20を超えたらヘドバン
             if(flag && !outflag && ct > 10) {
@@ -161,9 +166,9 @@ public class MainActivity extends AppCompatActivity
                 button1.setText("Stop");
             }
         }else{
-            textView1.setText("warning!!!!!!!!");
+            textView1.setText("Warning!!!!!!!!");
             textView2.setText("ヘドバンの時間だ！！！");
-            button1.setText("NOOO");
+            button1.setText("Wake Up");
         }
     }
 }
