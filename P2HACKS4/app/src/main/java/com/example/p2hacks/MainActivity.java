@@ -4,6 +4,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
@@ -31,6 +32,13 @@ public class MainActivity extends AppCompatActivity
     private float ct = 0;    //センサのカウンタ
     private int limit = 4;
 
+    //バイブレーターオブジェクト
+    Vibrator vibrator;
+    private long vibPatter[] = {1000,2000};//{なり続ける時間,休憩時間}
+
+    //private boolean move = false;
+    public  boolean move = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,15 +49,21 @@ public class MainActivity extends AppCompatActivity
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
+        //バイブレーターの初期化
+        vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
+
+
         textView1 = findViewById(R.id.ueText);
         textView2 = findViewById(R.id.sitaText);
 
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                flag = !flag;
-                textset(flag, outflag);
-                ct = 0;
+                if(!outflag) {
+                    flag = !flag;
+                    textset(flag, outflag);
+                    ct = 0;
+                }
             }
         });
 
@@ -112,6 +126,7 @@ public class MainActivity extends AppCompatActivity
                 outflag = !outflag;
                 textset(flag, outflag);
                 ct = 0;
+                vibrator.vibrate(vibPatter,1);
                 //このあたりで音声鳴らしてもよか？
             //ヘドバンのとき，ctが60を超えたとき最初の画面へ
             }else if(outflag && ct > 300){
@@ -119,11 +134,12 @@ public class MainActivity extends AppCompatActivity
                 flag = !flag;
                 textset(flag,outflag);
                 ct = 0;
+                vibrator.cancel();
             }
 
             if(outflag){
                 //このときアラームを鳴らす
-
+               // vibrator.vibrate(vibPatter,1);
             }
         }
     }
