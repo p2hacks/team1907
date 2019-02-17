@@ -18,6 +18,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import android.media.MediaPlayer;
+
 import static android.hardware.Sensor.TYPE_ACCELEROMETER;
 import static com.example.p2hacks.R.id.onButton;
 
@@ -38,6 +40,11 @@ public class MainActivity extends AppCompatActivity
     Vibrator vibrator;
     private long vibPatter[] = {1000,2000};//{なり続ける時間,休憩時間}
 
+    //MediaPlayer
+    private MediaPlayer bell = null;
+    private MediaPlayer donpafu = null;
+
+
     //private boolean move = false;
     public  boolean move = false;
 
@@ -49,6 +56,12 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ///////////////////////////////////////////////
+        donpafu  = MediaPlayer.create(this, R.raw.heavy);//メディアプレイヤー出来上がり
+        //donpafu.start();
+
+        ///////////////////////////////////////////////
 
         /*-----onボタン押したらtextView, ImageView変更-----*/
         button1 = findViewById(onButton);
@@ -133,6 +146,12 @@ public class MainActivity extends AppCompatActivity
                 textset(flag, outflag);
                 ct = 0;
                 vibrator.vibrate(vibPatter,1);
+                /////////////////////////////////////
+                donpafu.setLooping(true);
+                //donpafu.setlooping(boolean looping);
+                donpafu.seekTo(0);
+                donpafu.start();//Start?
+                //////////////////////////////////////////
                 //このあたりで音声鳴らしてもよか？
             //ヘドバンのとき，ctが60を超えたとき最初の画面へ
             }else if(outflag && ct > 300){
@@ -141,6 +160,13 @@ public class MainActivity extends AppCompatActivity
                 textset(flag,outflag);
                 ct = 0;
                 vibrator.cancel();
+                //////////////////////////////////////////////
+                if(donpafu.isPlaying()) {
+                    //donpafu.stop();
+                    donpafu.pause();
+
+                }
+                ///////////////////////////////
             }
 
             if(outflag){
