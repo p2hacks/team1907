@@ -34,7 +34,10 @@ public class MainActivity extends AppCompatActivity
     private SensorManager sensorManager; //センサのマネージャ
     private float bufx = 0, bufy = 0, bufz = 0; //センサの値のバッファ
     private float ct = 0;    //センサのカウンタ
-    private int limit = 4;
+    private int limit = 4;   //傾き変化量の制限
+    private int hedlim = 10;    //ヘドバンが始まるまでの値
+    private int hedend = 300;   //ヘドバン要求回数
+
 
     //バイブレーターオブジェクト
     Vibrator vibrator;
@@ -146,7 +149,7 @@ public class MainActivity extends AppCompatActivity
             if(flag || outflag) textView2.setText(strct);//カウント確認用なのでコメントアウト
 
             //stopボタンのとき，ctが20を超えたらヘドバン
-            if(flag && !outflag && ct > 10) {
+            if(flag && !outflag && ct > hedlim) {
                 outflag = !outflag;
                 textset(flag, outflag);
                 ct = 0;
@@ -159,7 +162,7 @@ public class MainActivity extends AppCompatActivity
                 //////////////////////////////////////////
                 //このあたりで音声鳴らしてもよか？
             //ヘドバンのとき，ctが60を超えたとき最初の画面へ
-            }else if(outflag && ct > 300){
+            }else if(outflag && ct > hedend){
                 outflag = !outflag;
                 flag = !flag;
                 textset(flag,outflag);
