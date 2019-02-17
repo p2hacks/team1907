@@ -1,5 +1,6 @@
 package com.example.p2hacks;
 
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -167,7 +168,9 @@ public class MainActivity extends AppCompatActivity
             }
         }else{
             textView1.setText("Warning!!!!!!!!");
+            //textView1.setTextColor(Color.RED);
             textView2.setText("ヘドバンの時間だ！！！");
+            //textView2.setTextColor(Color.RED);
             button1.setText("Wake Up");
         }
     }
