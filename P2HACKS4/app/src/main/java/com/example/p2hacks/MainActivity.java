@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity
     private int limit = 4;   //傾き変化量の制限
     private int hedlim = 10;    //ヘドバンが始まるまでの値
     private int hedend = 300;   //ヘドバン要求回数
+    private int alr = 0;
+
 
 
     //バイブレーターオブジェクト
@@ -57,13 +59,36 @@ public class MainActivity extends AppCompatActivity
     private SoundPool soundPool;
     private int soundOne, soundTwo;
 
+    //the key constant
+    public static final String EXTRA_MESSAGE
+            ="YourPackageName.MESSAGE";
+
+    static final int RESULT_SUBACTIVITY = 1000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ///////////////////////////////////////////////
-        donpafu  = MediaPlayer.create(this, R.raw.heavy);//メディアプレイヤー出来上がり
+        if(alr == 0){
+            switch (alr){
+                case 1:
+                    donpafu  = MediaPlayer.create(this, R.raw.heavy);
+                    break;
+                case 2:
+                    donpafu  = MediaPlayer.create(this, R.raw.heavy);
+                    break;
+                case 3:
+                    donpafu  = MediaPlayer.create(this, R.raw.heavy);
+                    break;
+                default:
+                    donpafu  = MediaPlayer.create(this, R.raw.heavy);
+                    break;
+            }
+        }
+
+        //donpafu  = MediaPlayer.create(this, R.raw.heavy);//メディアプレイヤー出来上がり
         start  = MediaPlayer.create(this, R.raw.push);//メディアプレイヤー出来上がり
         stop = MediaPlayer.create(this, R.raw.push);//メディアプレイヤー出来上がり
         //donpafu.start();
@@ -100,7 +125,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplication(), sub2.class);
-                startActivity(intent);
+                intent.putExtra(EXTRA_MESSAGE,alr);
+                startActivityForResult( intent, RESULT_SUBACTIVITY );
             }
         });
 
@@ -186,6 +212,26 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy){
+
+    }
+
+    // SubActivity からの返しの結果を受け取る
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent){
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if(resultCode == RESULT_OK && requestCode == RESULT_SUBACTIVITY && null != intent){
+            String me = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+            if(me.equals("-1")) {}//donpafu  = MediaPlayer.create(this, R.raw.heavy);                   //デフォルトのヘビメタ
+            else{
+                if(me.equals("ヘビメタ")) donpafu  = MediaPlayer.create(this, R.raw.heavy);         //ヘビメタ音声
+                else if(me.equals("ラジオ体操")) donpafu  = MediaPlayer.create(this, R.raw.radio);   //ラジオ体操音源
+                else if(me.equals("妹")) donpafu  = MediaPlayer.create(this, R.raw.young_sister);   //妹音声
+                else if(me.equals("姉")) donpafu  = MediaPlayer.create(this, R.raw.old_sister);    //姉音声
+                else if(me.equals("怪獣"))  donpafu  = MediaPlayer.create(this, R.raw.monster);    //怪獣音声
+                else donpafu  = MediaPlayer.create(this, R.raw.siren);
+            }
+            textView2.setText(me);
+        }
 
     }
 

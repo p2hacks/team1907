@@ -21,10 +21,9 @@
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/radioGroup"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.69" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageButton
         android:id="@+id/returnButton"
@@ -41,7 +40,7 @@
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="257dp"
-        android:layout_height="217dp"
+        android:layout_height="365dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -58,7 +57,7 @@
         <RadioButton
             android:id="@+id/radio1"
             android:layout_width="276dp"
-            android:layout_height="64dp"
+            android:layout_height="42dp"
             android:text="ヘビメタ"
             android:textSize="18sp"
             tools:layout_editor_absoluteX="124dp"
@@ -67,7 +66,7 @@
         <RadioButton
             android:id="@+id/radio2"
             android:layout_width="match_parent"
-            android:layout_height="67dp"
+            android:layout_height="22dp"
             android:layout_weight="1"
             android:text="ラジオ体操"
             android:textSize="18sp" />
@@ -75,11 +74,36 @@
         <RadioButton
             android:id="@+id/radio3"
             android:layout_width="match_parent"
-            android:layout_height="83dp"
-            android:text="俺の妹がヘドバンで起こすはずがない"
+            android:layout_height="47dp"
+            android:text="妹"
             android:textSize="18sp"
             tools:layout_editor_absoluteX="124dp"
             tools:layout_editor_absoluteY="104dp" />
+
+        <RadioButton
+            android:id="@+id/radio4"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_weight="1"
+            android:text="姉"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/radio5"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_weight="1"
+            android:text="怪獣"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/radio6"
+            android:layout_width="274dp"
+            android:layout_height="7dp"
+            android:layout_weight="1"
+            android:text="サイレン"
+            android:textSize="18sp" />
+
     </RadioGroup>
 
 </android.support.constraint.ConstraintLayout>
