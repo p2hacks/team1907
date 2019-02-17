@@ -41,8 +41,10 @@ public class MainActivity extends AppCompatActivity
     private long vibPatter[] = {1000,2000};//{なり続ける時間,休憩時間}
 
     //MediaPlayer
-    private MediaPlayer bell = null;
+    private MediaPlayer start = null;
     private MediaPlayer donpafu = null;
+
+    private MediaPlayer stop = null;
 
 
     //private boolean move = false;
@@ -59,6 +61,8 @@ public class MainActivity extends AppCompatActivity
 
         ///////////////////////////////////////////////
         donpafu  = MediaPlayer.create(this, R.raw.heavy);//メディアプレイヤー出来上がり
+        start  = MediaPlayer.create(this, R.raw.push);//メディアプレイヤー出来上がり
+        stop = MediaPlayer.create(this, R.raw.push);//メディアプレイヤー出来上がり
         //donpafu.start();
 
         ///////////////////////////////////////////////
@@ -79,6 +83,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if(!outflag) {
+                    start.start();//ボタン音声
                     flag = !flag;
                     textset(flag, outflag);
                     ct = 0;
