@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        /*-----設定ボタン-----*/
+        /*-----設定ボタン (設定画面への遷移）-----*/
         ImageButton sendButton = findViewById(R.id.setButton);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
